@@ -1,0 +1,184 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tocafy Design System - Musical Theme
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 0 0% 7%;
+    --foreground: 0 0% 98%;
+
+    --card: 0 0% 9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 141 76% 48%;
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 141 76% 60%;
+
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 90%;
+
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 141 76% 48%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 250 5% 95%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 15%;
+    --ring: 141 76% 48%;
+    
+    /* Spotify Theme Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(141 76% 48%), hsl(141 76% 60%));
+    --gradient-secondary: linear-gradient(135deg, hsl(0 0% 9%), hsl(0 0% 12%));
+    --gradient-accent: linear-gradient(135deg, hsl(141 76% 48%), hsl(141 76% 55%));
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 9%), hsl(0 0% 11%));
+    
+    /* Spotify Effects */
+    --shadow-glow: 0 0 40px hsl(141 76% 48% / 0.3);
+    --shadow-card: 0 10px 30px -10px hsl(0 0% 4% / 0.5);
+    --shadow-button: 0 5px 20px -5px hsl(141 76% 48% / 0.4);
+    
+    /* Animation timings */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    
+    /* Accessibility High Contrast Theme */
+    --high-contrast-background: 0 0% 0%;
+    --high-contrast-foreground: 0 0% 100%;
+    --high-contrast-border: 0 0% 100%;
+    --high-contrast-primary: 210 100% 70%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  /* Accessibility Classes */
+  .high-contrast {
+    --background: var(--high-contrast-background);
+    --foreground: var(--high-contrast-foreground);
+    --border: var(--high-contrast-border);
+    --primary: var(--high-contrast-primary);
+  }
+  
+  .large-text {
+    font-size: 1.25rem;
+    line-height: 1.75;
+  }
+  
+  .large-text h1 { font-size: 3rem; }
+  .large-text h2 { font-size: 2.5rem; }
+  .large-text h3 { font-size: 2rem; }
+  .large-text button { font-size: 1.25rem; padding: 0.75rem 1.5rem; }
+}
+
+@layer components {
+  /* Enhanced Animations */
+  .fade-in {
+    animation: fade-in 0.5s ease-out;
+  }
+  
+  .slide-up {
+    animation: slide-up 0.3s ease-out;
+  }
+  
+  .hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+}
+
+@layer utilities {
+  /* Mobile-first responsive utilities */
+  @media (max-width: 375px) {
+    .mobile-compact {
+      padding: 0.5rem;
+      font-size: 0.875rem;
+    }
+    
+    .mobile-stack {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+}
