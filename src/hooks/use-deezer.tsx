@@ -24,6 +24,40 @@ export interface DeezerSearchResponse {
 
 const DEEZER_API_BASE = 'https://api.deezer.com';
 
+// JSONP helper function to avoid CORS issues
+const jsonpRequest = (url: string, callbackName: string): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    const timeoutId = setTimeout(() => {
+      cleanup();
+      reject(new Error('JSONP request timeout'));
+    }, 10000);
+
+    const cleanup = () => {
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+      if ((window as any)[callbackName]) {
+        delete (window as any)[callbackName];
+      }
+      clearTimeout(timeoutId);
+    };
+
+    (window as any)[callbackName] = (data: any) => {
+      cleanup();
+      resolve(data);
+    };
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error('JSONP request failed'));
+    };
+
+    script.src = url;
+    document.head.appendChild(script);
+  });
+};
+
 export const useDeezer = () => {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<DeezerTrack[]>([]);
@@ -37,15 +71,10 @@ export const useDeezer = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(
-        `${DEEZER_API_BASE}/search?q=${encodeURIComponent(query)}&limit=${limit}`
-      );
+      const callbackName = `deezer_callback_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const url = `${DEEZER_API_BASE}/search?q=${encodeURIComponent(query)}&limit=${limit}&output=jsonp&callback=${callbackName}`;
       
-      if (!response.ok) {
-        throw new Error('Erro na busca');
-      }
-      
-      const data: DeezerSearchResponse = await response.json();
+      const data: DeezerSearchResponse = await jsonpRequest(url, callbackName);
       setResults(data.data || []);
     } catch (error) {
       console.error('Erro ao buscar músicas:', error);
@@ -64,15 +93,10 @@ export const useDeezer = () => {
     if (!query.trim()) return [];
 
     try {
-      const response = await fetch(
-        `${DEEZER_API_BASE}/search/artist?q=${encodeURIComponent(query)}&limit=${limit}`
-      );
+      const callbackName = `deezer_artist_callback_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const url = `${DEEZER_API_BASE}/search/artist?q=${encodeURIComponent(query)}&limit=${limit}&output=jsonp&callback=${callbackName}`;
       
-      if (!response.ok) {
-        throw new Error('Erro na busca de artistas');
-      }
-      
-      const data = await response.json();
+      const data = await jsonpRequest(url, callbackName);
       return data.data || [];
     } catch (error) {
       console.error('Erro ao buscar artistas:', error);
@@ -87,13 +111,10 @@ export const useDeezer = () => {
 
   const getTrackDetails = useCallback(async (trackId: string) => {
     try {
-      const response = await fetch(`${DEEZER_API_BASE}/track/${trackId}`);
+      const callbackName = `deezer_track_callback_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const url = `${DEEZER_API_BASE}/track/${trackId}?output=jsonp&callback=${callbackName}`;
       
-      if (!response.ok) {
-        throw new Error('Erro ao obter detalhes da música');
-      }
-      
-      return await response.json();
+      return await jsonpRequest(url, callbackName);
     } catch (error) {
       console.error('Erro ao obter detalhes da música:', error);
       toast({

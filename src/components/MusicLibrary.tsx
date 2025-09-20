@@ -271,9 +271,12 @@ export const MusicLibrary = () => {
 
       {/* Add Song Dialog */}
       <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px]" aria-describedby="add-song-description">
           <DialogHeader>
             <DialogTitle>Adicionar Nova Música</DialogTitle>
+            <p id="add-song-description" className="text-sm text-muted-foreground">
+              Preencha os campos abaixo para adicionar uma nova música à sua biblioteca
+            </p>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
