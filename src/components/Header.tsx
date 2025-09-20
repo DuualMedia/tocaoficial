@@ -1,7 +1,7 @@
-import { Music, Search, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { UserProfile } from "@/components/UserProfile";
+import { DeezerSearch } from "@/components/DeezerSearch";
 import musicIcon from "@/assets/music-icon.png";
 
 export const Header = () => {
@@ -18,13 +18,10 @@ export const Header = () => {
 
         {/* Search Bar */}
         <div className="flex-1 max-w-md mx-8">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder="Buscar músicas, artistas..."
-              className="pl-10 bg-secondary/50 border-border"
-            />
-          </div>
+          <DeezerSearch 
+            placeholder="Buscar músicas, artistas..."
+            showHeader={false}
+          />
         </div>
 
         {/* Actions */}
