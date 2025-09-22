@@ -114,8 +114,42 @@ const Audience = () => {
         }
       }
       
-      // If still not found, try searching all live shows to debug
-      if (error) {
+      // If not found yet and input looks like a username (no underscore), try by artist username
+      if (!show && !normalizedCode.includes('_')) {
+        console.log('Trying to find live show by artist username:', normalizedCode);
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('id, username, display_name')
+          .ilike('username', normalizedCode)
+          .maybeSingle();
+
+        console.log('Profile search result:', { profile, profileError });
+
+        if (profile && !profileError) {
+          const { data: showByArtist, error: showByArtistError } = await supabase
+            .from('shows')
+            .select(`
+              id,
+              name,
+              status,
+              username_code,
+              artist:profiles(display_name)
+            `)
+            .eq('artist_id', profile.id)
+            .eq('status', 'live')
+            .order('started_at', { ascending: false })
+            .maybeSingle();
+
+          console.log('Show by artist result:', { showByArtist, showByArtistError });
+
+          if (showByArtist && !showByArtistError) {
+            show = showByArtist;
+          }
+        }
+      }
+
+      // If still not found, try searching all live shows for debugging
+      if (!show) {
         console.log('Show not found, searching all live shows for debugging');
         const { data: allShows } = await supabase
           .from('shows')
@@ -124,7 +158,7 @@ const Audience = () => {
         console.log('All live shows:', allShows);
       }
 
-      if (error || !show) {
+      if (!show) {
         throw new Error('Show não encontrado ou não está ao vivo');
       }
 
