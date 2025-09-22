@@ -69,6 +69,12 @@ const Audience = () => {
   const connectToShowByCode = async (code: string) => {
     setLoading(true);
     try {
+      console.log('Searching for show with code:', code);
+      
+      // Remove @ if present and normalize the code
+      const normalizedCode = code.replace('@', '').trim();
+      console.log('Normalized code:', normalizedCode);
+      
       // First try to connect by username_code
       let { data: show, error } = await supabase
         .from('shows')
@@ -79,12 +85,15 @@ const Audience = () => {
           username_code,
           artist:profiles(display_name)
         `)
-        .eq('username_code', code)
+        .eq('username_code', normalizedCode)
         .eq('status', 'live')
         .single();
 
+      console.log('Show search result:', { show, error });
+
       // If not found by username_code, try by UUID (for backward compatibility)
       if (error && code.length === 36) {
+        console.log('Trying to find by UUID:', code);
         const { data: showById, error: errorById } = await supabase
           .from('shows')
           .select(`
@@ -98,10 +107,21 @@ const Audience = () => {
           .eq('status', 'live')
           .single();
 
+        console.log('UUID search result:', { showById, errorById });
         if (!errorById) {
           show = showById;
           error = null;
         }
+      }
+      
+      // If still not found, try searching all live shows to debug
+      if (error) {
+        console.log('Show not found, searching all live shows for debugging');
+        const { data: allShows } = await supabase
+          .from('shows')
+          .select('id, name, username_code, status')
+          .eq('status', 'live');
+        console.log('All live shows:', allShows);
       }
 
       if (error || !show) {

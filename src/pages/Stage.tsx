@@ -43,6 +43,8 @@ export default function Stage() {
   const { showId } = useParams();
   const { toast } = useToast();
   
+  console.log('Stage component loaded with showId:', showId);
+  
   // State Management
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const [requests, setRequests] = useState<Request[]>([

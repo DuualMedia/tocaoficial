@@ -371,7 +371,12 @@ export const ShowManager = () => {
                   {(show.status === "live" || show.status === "paused") && (
                     <Button 
                       size="sm"
-                      onClick={() => window.open(`/stage/${show.id}`, '_blank')}
+                      onClick={() => {
+                        console.log('Opening stage mode for show:', show.id);
+                        const stageUrl = `/stage/${show.id}`;
+                        console.log('Stage URL:', stageUrl);
+                        window.open(stageUrl, '_blank');
+                      }}
                       className="bg-gradient-primary hover:opacity-90"
                     >
                       <Eye className="w-4 h-4 mr-1" />
